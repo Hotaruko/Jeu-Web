@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Events </title>
+    </head>
+    <body>
+		<CANVAS WIDTH="800" HEIGHT="600" ID="canvas_1" tabindex="0" style="border-style: solid; border-width: 2px; width: 800px;">
+			Canvas tag not supported
+		</CANVAS>
+    </body>
+<script>
+var canvas = document.getElementById("canvas_1");
+var sprite = new Image();
+sprite.src = 'sprite.png';
+var ctx = canvas.getContext("2d");
+canvas.addEventListener('keydown', doKeyDown, true);
+canvas.addEventListener("mousedown", doMouseDown,false);
+var x = 0;
+var y = 0;
+var i = 0;
+var idpl=0;
+var MouseX=0;
+var MouseY=0;
+var check = 0;
+var deplacement=false;
+var MouseActivated=false;
+var Spell=false;
+var SpellI=0;
+var HadokenImg = new Image();
+HadokenImg.src = 'Hadoken.png';
+var KamehaImg = new Image();
+KamehaImg.src = 'Kame.png';
+var HadoukenSound = new Audio();
+HadoukenSound.src ='Hadouken.mp3'
+var KameI = 0;
+var KameSound = new Audio();
+KameSound.src ='Kamehameha.mp3'
+var SpellCpt = 0;
+var GuileTheme = new Audio();
+GuileTheme.src ='Guile_theme.mp3'
+var Goomba = new Image();
+Goomba.src = 'goomba.png';
+
+ctx.drawImage(sprite,128,256,128,128,x,y,128,128);
+ctx.drawImage(Goomba,300,300);
+
+function MouseMove(){
+	if (MouseX-x>1){ // faire un timeout
+		check = 4;
+		deplacement=true;
+		requestAnimationFrame(Move);
+	}
+	else {
+		if (x-MouseX>1){
+			check = 3;
+			deplacement=true;
+			requestAnimationFrame(Move);
+		}
+		else {
+			if (MouseY-y>1){
+				check = 1;
+				deplacement=true;
+				requestAnimationFrame(Move);
+			}
+			else { 
+				if (y-MouseY>1){
+					check = 2;
+					deplacement=true;
+					requestAnimationFrame(Move)
+				}
+				else {
+					MouseActivated=false;
+				}
+			}
+		}
+	}
+	if (MouseActivated == true) {
+		setTimeout(function(){requestAnimationFrame(MouseMove);},16);	
+	}	
+}
+
+function doMouseDown(event){
+	MouseX=event.clientX-75;
+	MouseY=event.clientY-75;
+	if (MouseActivated == false) {
+		MouseActivated = true;
+		requestAnimationFrame(MouseMove);
+	}
+}
+
+function Move() {
+	clearCanvas();
+	idpl++;
+	if (idpl==10){
+		i++;
+		idpl=0;
+	}
+	if (i==4){
+		i=0;
+	}
+	if (check == 1){ // down
+		y+=2;
+		ctx.drawImage(sprite,128*i,256,128,128,x,y,128,128);
+	}
+	if (check == 2){ // up
+		y-=2;
+		ctx.drawImage(sprite,128*i,384,128,128,x,y,128,128);
+	}
+	if (check == 3){ //left
+		x-=2;
+		ctx.drawImage(sprite,128*i,0,128,128,x,y,128,128);
+	}
+	if (check == 4){ // right
+		x+=2;
+		ctx.drawImage(sprite,128*i,128,128,128,x,y,128,128);
+	}
+	ctx.drawImage(Goomba,300,300);
+	deplacement=false;
+}
+
+function clearCanvas() {
+	canvas.width = canvas.width; // ?
+}
+
+function Hadoken(){
+	clearCanvas();
+	ctx.drawImage(sprite,128*i,128,128,128,x,y,128,128);
+	ctx.drawImage(HadokenImg,160*(SpellI%5),120*(Math.floor(SpellI/5)),160,120,100+x+10*SpellCpt+SpellI*30,y,128,128);
+	if (100+x+10*SpellCpt+SpellI*30>250 && x<300 && y>250 && y<450){
+		Goomba.src= 'NoGoomba.png';
+	}
+	ctx.drawImage(Goomba,300,300);
+	SpellCpt++;
+	if (SpellCpt == 3){
+		SpellCpt = 0;	
+		SpellI++;
+	}
+	if (SpellI==8){
+		SpellI=0;
+		Spell=false;	
+		MouseActivated=false;
+		deplacement=false;
+		setTimeout(function(){
+			clearCanvas();
+			ctx.drawImage(Goomba,300,300);
+			ctx.drawImage(sprite,128*i,128,128,128,x,y,128,128);},100);
+	}
+	else {
+		setTimeout(function(){requestAnimationFrame(Hadoken);},16);
+	}
+}
+
+function Kameha(){
+	clearCanvas();
+	ctx.drawImage(sprite,128*i,128,128,128,x,y,128,128);
+	ctx.drawImage(KamehaImg,0,78*(KameI%2),200,78,x+100,y+30,200,78);
+	KameI++;
+	if (x+150>200 && x<300 && y>250 && y<450){
+		Goomba.src='NoGoomba.png';
+	}
+	ctx.drawImage(Goomba,300,300);
+	if (KameI==32){
+		KameI=0;
+		Spell=false;
+		MouseActivated=false;
+		deplacement=false;
+		setTimeout(function(){
+			clearCanvas();
+			ctx.drawImage(Goomba,300,300);
+			ctx.drawImage(sprite,128*i,128,128,128,x,y,128,128);},100);
+	}
+	else {
+		setTimeout(function(){requestAnimationFrame(Kameha);},100);
+	}
+}
+
+function doKeyDown(e){ 
+   e.preventDefault();
+
+	//====================
+	//	THE down-arrow KEY
+	//====================
+	if (e.keyCode == 40) {
+		if(deplacement==false){
+			check = 1;
+			deplacement=true;
+			setTimeout(function(){requestAnimationFrame(Move);},16);
+		}false
+	}
+
+	//====================
+	//	THE up-arrow KEY
+	//====================
+	if (e.keyCode == 38) {
+		if(deplacement==false){
+			check = 2;
+			deplacement=true;
+			setTimeout(function(){requestAnimationFrame(Move);},16);
+		}
+	}
+
+	//====================
+	//	THE left-arrow KEY
+	//====================
+	if (e.keyCode == 37) {
+		if(deplacement==false){
+			check = 3;
+			deplacement=true;
+			setTimeout(function(){requestAnimationFrame(Move);},16);
+		}
+	}
+
+	//====================
+	//	THE right-arrow KEY
+	//====================
+	if (e.keyCode == 39) {
+		if(deplacement==false){
+			check = 4;
+			deplacement=true;
+			setTimeout(function(){requestAnimationFrame(Move);},16);
+		}
+	}
+
+	//====================
+	//	THE Space KEY
+	//====================
+ 	 if (e.keyCode == 32) {
+		if(Spell==false && MouseActivated==false){
+			MouseActivated=true;
+			Spell=true;
+			deplacement=true;
+			setTimeout(function(){requestAnimationFrame(Hadoken);},100);
+			HadoukenSound.play();
+		}
+	}
+
+	//====================
+	//	THE Enter KEY
+	//====================
+ 	 if (e.keyCode == 13) {
+		if(Spell==false && MouseActivated==false){
+			MouseActivated=true;
+			Spell=true;
+			deplacement=true;
+			setTimeout(function(){requestAnimationFrame(Kameha);},100);
+			KameSound.play();
+		}
+	}
+	
+	//====================
+	//	THE Tab KEY
+	//====================
+ 	 if (e.keyCode == 9) {
+		GuileTheme.play();
+	}
+
+	//====================
+	//	THE Escape KEY
+	//====================
+ 	 if (e.keyCode == 27) {
+		Goomba.src = 'goomba.png';
+		ctx.drawImage(Goomba,300,300);
+	}
+  //Space is 32, Enter is 13, Tab is 9, esc is 27, backspace is 8... 
+  // A to Z is 65 to 90
+
+}
+    </script>
