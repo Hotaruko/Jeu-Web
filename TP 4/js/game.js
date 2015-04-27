@@ -204,94 +204,66 @@ var enemies = {
 };
 //test
 function Enemy(x,y,speed){
-    this.x = x;
-    this.yOrigine = 100*y;
-    this.y = this.yOrigine;
-    this.xSpeed = speed*2-1;
-    this.exists = true;
-    this.height = 30;
-    this.width = 40;
+    	this.x = x;
+   	this.yOrigine = 100*y;
+   	this.y = this.yOrigine;
+    	this.xSpeed = speed*2-1;
+    	this.exists = true;
+    	this.height = 30;
+   	this.width = 40;
 	this.pattern=y;
-    this.img = new Image();
-    this.img.src = "./assets/Enemy/eSpritesheet_40x30.png";
-    this.cpt = 0;
-	this.offscreenCanvas = new Array();
-	while (this.cpt<6){
-		this.offscreenCanvas[this.cpt] = document.createElement("canvas");
-		this.offscreenCanvas[this.cpt].width = this.width;
-		this.offscreenCanvas[this.cpt].height = this.height;
-		this.offscreenContext = this.offscreenCanvas[this.cpt].getContext("2d");
-		this.offscreenContext.drawImage(this.img,0,this.height*this.cpt,this.width,this.height,0,0,this.width,this.height);
-		this.cpt++;
-	}
 	this.cpt=0;
-
-    this.cptExplosion =  0;//10 images
-    this.imgExplosion = new Image();
-    this.imgExplosionHeight = 128;
-    this.imgExplosionWidth = 128;
-    this.imgExplosion.src = "./assets/Explosion/explosionSpritesheet_1280x128.png";
-	this.offscreenExplosion = new Array();
-	while (this.cptExplosion<10){
-		this.offscreenExplosion[this.cptExplosion] = document.createElement("canvas");
-		this.offscreenExplosion[this.cptExplosion].width = this.imgExplosionWidth;
-		this.offscreenExplosion[this.cptExplosion].height = this.imgExplosionHeight;
-		this.offscreenContext = this.offscreenExplosion[this.cptExplosion].getContext("2d");
-		this.offscreenContext.drawImage(this.imgExplosion,this.imgExplosionWidth*this.cptExplosion,0,this.imgExplosionWidth,this.imgExplosionHeight,0,0,this.imgExplosionWidth,this.imgExplosionHeight);
-    		this.cptExplosion++;
-	}
-	this.cptExplosion=0;
+    	this.cptExplosion =  0;//10 images
 	this.projectileSet = new ProjectileSet();
-    this.explodes = function(){
-        this.cptExplosion = 1;
-    };
-    this.collision = function(tabOfObjects){
-        var hits = null;
-        var index;
-        for(index in tabOfObjects){
-            if (this.x < tabOfObjects[index].x + tabOfObjects[index].width &&
-                this.x + this.width > tabOfObjects[index].x &&
-                this.y < tabOfObjects[index].y + tabOfObjects[index].height &&
-                this.height + this.y > tabOfObjects[index].y) {
+    	this.explodes = function(){
+        	this.cptExplosion = 1;
+    	};
+    	this.collision = function(tabOfObjects){
+        	var hits = null;
+        	var index;
+        	for(index in tabOfObjects){
+            	if (this.x < tabOfObjects[index].x + tabOfObjects[index].width &&
+               this.x + this.width > tabOfObjects[index].x &&
+               this.y < tabOfObjects[index].y + tabOfObjects[index].height &&
+               this.height + this.y > tabOfObjects[index].y) {
                     // collision detected!
                     hits = tabOfObjects[index];
 				console.log("bang");
                     break;
-            }
-        }
-        return hits;
-    };
-    this.fire = function (){
-        var tmp = new Projectile(this.x-10,this.y+this.height/2,-4,10,5,"rgb(0,200,0)",false,false,false);
-        this.projectileSet.add(tmp);
-    };
-    this.draw = function(){ 
-
-        this.projectileSet.draw();
-	if (this.cptExplosion<100){
-		   if(this.cptExplosion!=0){
-			if(this.cptExplosion<10){
-		          conArena.drawImage(this.offscreenExplosion[this.cptExplosion],this.x-44,this.y-49);
+            	}
+		}
+        	return hits;
+    	};
+    	this.fire = function (){
+        	var tmp = new Projectile(this.x-10,this.y+this.height/2,-4,10,5,"rgb(0,200,0)",false,false,false);
+        	this.projectileSet.add(tmp);
+   	};
+    	this.draw = function(){ 
+     	this.projectileSet.draw();
+		if (this.cptExplosion<100){
+		   	if(this.cptExplosion!=0){
+				if(this.cptExplosion<10){
+		          	conArena.drawImage(offscreenExplosion[this.cptExplosion],this.x-44,this.y-49);
+				}
+		   	}else{
+		       	conArena.drawImage(offscreenCanvasE[this.cpt],this.x,this.y);
+		   	}
+		}
+		else{
+			this.exists=false;
+		}
+    	};
+    	this.clear = function(){
+        	if(this.exists){
+			if (this.cptExplosion!=0){
+				conArena.clearRect(this.x-44,this.y-49,imgExplosionWidth,imgExplosionHeight);
 			}
-		   }else{
-		       conArena.drawImage(this.offscreenCanvas[this.cpt],this.x,this.y);
-		   }
-	}
-	else	{
-		this.exists=false;
-	}
-    };
-    this.clear = function(){
-        if(this.exists){
-		if (this.cptExplosion!=0){
-			conArena.clearRect(this.x-44,this.y-49,this.imgExplosionWidth,this.imgExplosionHeight);
-		}
-		else {
-           	conArena.clearRect(this.x,this.y,this.width,this.height);
-		}
-        }
-        this.projectileSet.clear();
-    };
+			else {
+           		conArena.clearRect(this.x,this.y,this.width,this.height);
+			}
+        	}
+        	this.projectileSet.clear();
+    	};
     this.update = function(){
        if(this.cptExplosion==0){//is not exploding
             this.x +=   this.xSpeed ;
@@ -338,39 +310,58 @@ function Enemy(x,y,speed){
     };
 }
 /////////////////////////////////
-
+// OffscreenCanvas
+     var imgExplosion = new Image();
+     var imgExplosionHeight = 128;
+     var imgExplosionWidth = 128;
+     imgExplosion.src = "./assets/Explosion/explosionSpritesheet_1280x128.png";
+	var ijk=0;
+	var offscreenExplosion = new Array();
+	while (ijk<10){
+			offscreenExplosion[ijk] = document.createElement("canvas");
+			offscreenExplosion[ijk].width = imgExplosionWidth;
+			offscreenExplosion[ijk].height = imgExplosionHeight;
+			offscreenContext = offscreenExplosion[ijk].getContext("2d");
+			offscreenContext.drawImage(imgExplosion,imgExplosionWidth*ijk,0,imgExplosionWidth,imgExplosionHeight,0,0,imgExplosionWidth,imgExplosionHeight);
+	    		ijk++;
+		}
+	ijk=0;
+     img = new Image();
+     img.src = "./assets/Ship/ship.png";
+	var offscreenCanvas = new Array();
+	var widthImg = 64;
+	var heightImg = 29;
+	while (ijk<4){
+		offscreenCanvas[ijk] = document.createElement("canvas");
+		offscreenCanvas[ijk].width = widthImg;
+		offscreenCanvas[ijk].height = heightImg;
+		offscreenContext = offscreenCanvas[ijk].getContext("2d");
+		offscreenContext.drawImage(img,0,heightImg*ijk,widthImg,heightImg,0,0,widthImg,heightImg);
+		ijk++;
+	}
+	ijk=0;
+    	heightE = 30;
+   	widthE = 40;
+   	imgE = new Image();
+   	imgE.src = "./assets/Enemy/eSpritesheet_40x30.png";
+    	offscreenCanvasE = new Array();
+	while (ijk<6){
+		offscreenCanvasE[ijk] = document.createElement("canvas");
+		offscreenCanvasE[ijk].width = widthE;
+		offscreenCanvasE[ijk].height = heightE;
+		offscreenContext = offscreenCanvasE[ijk].getContext("2d");
+		offscreenContext.drawImage(imgE,0,heightE*ijk,widthE,heightE,0,0,widthE,heightE);
+		ijk++;
+	}
 /////////////////////////////////
 // Hero Player
 var player = {
     init : function(){
-        this.img = new Image();
-        this.img.src = "./assets/Ship/ship.png";
         this.cpt = 0;
         this.cptExplosion =  0;//10 images
-        this.imgExplosion = new Image();
-        this.imgExplosionHeight = 128;
-        this.imgExplosionWidth = 128;
-        this.imgExplosion.src = "./assets/Explosion/explosionSpritesheet_1280x128.png";
         this.projectileSet = new ProjectileSet();
-	this.offscreenExplosion = new Array();
-		while (this.cptExplosion<10){
-			this.offscreenExplosion[this.cptExplosion] = document.createElement("canvas");
-			this.offscreenExplosion[this.cptExplosion].width = this.imgExplosionWidth;
-			this.offscreenExplosion[this.cptExplosion].height = this.imgExplosionHeight;
-			this.offscreenContext = this.offscreenExplosion[this.cptExplosion].getContext("2d");
-			this.offscreenContext.drawImage(this.imgExplosion,this.imgExplosionWidth*this.cptExplosion,0,this.imgExplosionWidth,this.imgExplosionHeight,0,0,this.imgExplosionWidth,this.imgExplosionHeight);
-	    		this.cptExplosion++;
-		}
+		this.Pew = false;
         this.cptExplosion =  0;
-	this.offscreenCanvas = new Array();
-	while (this.cpt<4){
-		this.offscreenCanvas[this.cpt] = document.createElement("canvas");
-		this.offscreenCanvas[this.cpt].width = this.width;
-		this.offscreenCanvas[this.cpt].height = this.height;
-		this.offscreenContext = this.offscreenCanvas[this.cpt].getContext("2d");
-		this.offscreenContext.drawImage(this.img,0,this.height*this.cpt,this.width,this.height,0,0,this.width,this.height);
-		this.cpt++;
-	}
 	this.cpt=0;
     },
     x : 20,
@@ -382,18 +373,18 @@ var player = {
     timeToBeAlive : 0,
     fires : function(){
 		var tmp;
-		tmp = new Projectile(this.x+this.width,this.y+(this.height/2),4,10,3,"rgb(200,0,0)",true,true,true);
+		tmp = new Projectile(this.x+this.width,this.y+(this.height/2),4,10,3,"rgb("+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+")",true,true,true);
         this.projectileSet.add(tmp);
-		tmp = new Projectile(this.x+this.width,this.y+(this.height/2),4,10,3,"rgb(200,0,0)",true,true,false);
+		tmp = new Projectile(this.x+this.width,this.y+(this.height/2),4,10,3,"rgb("+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+")",true,true,false);
         this.projectileSet.add(tmp);
-		tmp = new Projectile(this.x+this.width,this.y+(this.height/2),4,10,3,"rgb(200,0,0)",true,false,false);
+		tmp = new Projectile(this.x+this.width,this.y+(this.height/2),4,10,3,"rgb("+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+")",true,false,false);
         this.projectileSet.add(tmp);
     },
     explodes : function(){
         if(this.timeToBeAlive == 0) {
             this.nbOfLives--;
             if(this.nbOfLives>0){
-                this.timeToBeAlive = _timeToBeAlive;
+                this.timeToBeAlive = 50;
                 this.cptExplosion = 1;
             }else{
                 //Game Over
@@ -403,7 +394,7 @@ var player = {
     },
     clear : function(){
 	if (this.cptExplosion!=0){
-        conArena.clearRect(this.x-32,this.y-49,this.imgExplosionWidth,this.imgExplosionHeight);
+        conArena.clearRect(this.x-32,this.y-49,imgExplosionWidth,imgExplosionHeight);
 	}
 	else {
         conArena.clearRect(this.x,this.y,this.width,this.height);
@@ -428,24 +419,26 @@ var player = {
                         this.y += this.ySpeed;
                         if(this.y>ArenaHeight-this.height) this.y=ArenaHeight-this.height;
                     }	
-                    if(keycode == keys.SPACE) {
+                    if(keycode == keys.SPACE && this.Pew == false) {
                         //shoot
                         this.fires();
+					this.Pew=true;
                     }
                 }
              keyStatus[keycode] = false;
             }
         }
         this.projectileSet.update();
+	if(tics % 50 == 1) {this.Pew=false;}
     },
     draw : function(){
         if(this.timeToBeAlive == 0) {
-            conArena.drawImage(this.offscreenCanvas[this.cpt], this.x,this.y);
+            conArena.drawImage(offscreenCanvas[this.cpt], this.x,this.y);
         }else{
             //exploding
             if(this.cptExplosion!=0){
 			if (this.cptExplosion<10){
-               	 conArena.drawImage(this.offscreenExplosion[this.cptExplosion], this.x-32,this.y-49);
+               	 conArena.drawImage(offscreenExplosion[this.cptExplosion], this.x-32,this.y-49);
 			}
                if(tics % 3 == 1) {this.cptExplosion++;}
                 if(this.cptExplosion>10) this.cptExplosion=0;
@@ -564,7 +557,10 @@ function doMouseMove(event){
 }
 
 function doMouseDown(event){
-	player.fires();
+	if (player.Pew == false){
+		player.fires();
+		player.Pew = true;
+	}
 }
 
 window.addEventListener("load", init, false);
