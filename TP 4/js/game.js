@@ -230,7 +230,7 @@ function Enemy(x,y,speed){
     this.imgExplosion = new Image();
     this.imgExplosionHeight = 128;
     this.imgExplosionWidth = 128;
-    this.imgExplosion.src = "./assets/E10*Math.sin(this.pattern)xplosion/explosionSpritesheet_1280x128.png";
+    this.imgExplosion.src = "./assets/Explosion/explosionSpritesheet_1280x128.png";
 	this.offscreenExplosion = new Array();
 	while (this.cptExplosion<10){
 		this.offscreenExplosion[this.cptExplosion] = document.createElement("canvas");

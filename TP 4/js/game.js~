@@ -207,7 +207,7 @@ function Enemy(x,y,speed){
     this.x = x;
     this.yOrigine = 100*y;
     this.y = this.yOrigine;
-    this.xSpeed = speed*2;
+    this.xSpeed = speed*2-1;
     this.exists = true;
     this.height = 30;
     this.width = 40;
